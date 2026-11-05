@@ -965,6 +965,22 @@ white   = "${r.text}"`;
       animateShader();
     });
   </script>
-  <script src="/assets/sovereign-upgrade.js" defer></script>
+  
+
+  <script src="/sovereign_tutorial.js"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", function() {
+      if (window.createSovereignTutorial) {
+        window.createSovereignTutorial({
+          toolId: "reality-shader-forge",
+          toolName: "Zoth Reality Shader & Theme Forge",
+          tagline: "Real-time GLSL shader lab, retro CRT phosphors, and aesthetic UI themes!",
+          accentColor: "#EC4899",
+          steps: [{"icon": "\u2728", "title": "Live GLSL Shader Canvas", "desc": "Code and preview fragment shaders, dynamic aurora meshes, and liquid metal liquid chrome in real time."}, {"icon": "\ud83d\udcfa", "title": "Authentic Retro Monitors", "desc": "Toggle between arcade CRT phosphors, GameBoy LCD pixels, and cyberpunk amber terminals."}, {"icon": "\ud83c\udfa8", "title": "Export Pure CSS & Shaders", "desc": "Copy clean, zero-dependency shader code directly into your own web projects."}]
+        });
+      }
+    });
+  </script>
+
 </body>
 </html>
