@@ -62,8 +62,9 @@ def test_compile_json_descriptor(reality_id):
 
 
 def test_cli_list_and_status():
+    cli_bin = str(REPO_ROOT / "bin" / "reality-shader-forge")
     res_list = subprocess.run(
-        ["reality-shader-forge", "--list", "--json"],
+        [sys.executable, cli_bin, "--list", "--json"],
         capture_output=True,
         text=True,
         check=True,
@@ -73,7 +74,7 @@ def test_cli_list_and_status():
     assert "gold" in data_list and "emerald" in data_list
 
     res_status = subprocess.run(
-        ["reality-shader-forge", "--status", "--json"],
+        [sys.executable, cli_bin, "--status", "--json"],
         capture_output=True,
         text=True,
         check=True,

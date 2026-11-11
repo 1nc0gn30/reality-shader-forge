@@ -157,7 +157,7 @@ class RealityForgeHandler(http.server.SimpleHTTPRequestHandler):
                     {
                         "status": "ok",
                         "service": "reality-shader-forge",
-                        "version": "3.3.0",
+                        "version": "3.4.0",
                         "port": getattr(self.server, "port", 8134),
                         "mode": "standalone-sovereign",
                         "realities": [r["id"] for r in REALITIES],
@@ -218,8 +218,23 @@ class ThreadingTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 def main():
     parser = argparse.ArgumentParser(description="Zoth Reality Shader & Theme Forge Daemon")
+    parser.add_argument("--version", action="version", version="reality-shader-forge 3.4.0")
     parser.add_argument("--port", type=int, default=8134, help="Port to bind (default: 8134)")
+    parser.add_argument("--status", action="store_true", help="Print service status and exit")
+    parser.add_argument("--json", action="store_true", help="Output status as JSON")
     args = parser.parse_args()
+
+    if args.status or args.json:
+        payload = {
+            "service": "reality-shader-forge",
+            "version": "3.4.0",
+            "port": args.port,
+            "realities": [r["id"] for r in REALITIES],
+            "formats": ["kde", "alacritty", "css", "json"],
+            "status": "ready",
+        }
+        print(json.dumps(payload, indent=2))
+        return
 
     server = ThreadingTCPServer(("127.0.0.1", args.port), RealityForgeHandler)
     server.port = args.port
