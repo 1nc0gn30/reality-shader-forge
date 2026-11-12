@@ -127,6 +127,36 @@ white   = "{r['text']}" """.strip()
   --zoth-shadow-glow: 0 0 24px {r['primary']}33;
 }}"""
 
+    if format_type == "frag":
+        rgb_s = hex_to_rgb(r["secondary"])
+        return f"""// Zoth Reality Kinetic Shader Fragment: {r['name']}
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform vec2 u_resolution;
+uniform float u_time;
+
+const vec3 c_primary = vec3({rgb_p['r']/255:.4f}, {rgb_p['g']/255:.4f}, {rgb_p['b']/255:.4f});
+const vec3 c_secondary = vec3({rgb_s['r']/255:.4f}, {rgb_s['g']/255:.4f}, {rgb_s['b']/255:.4f});
+const vec3 c_void = vec3({rgb_v['r']/255:.4f}, {rgb_v['g']/255:.4f}, {rgb_v['b']/255:.4f});
+
+void main() {{
+    vec2 st = gl_FragCoord.xy / u_resolution.xy;
+    st.x *= u_resolution.x / u_resolution.y;
+    vec2 pos = st * 3.0;
+    float wave = sin(pos.x + u_time) * cos(pos.y + u_time * 0.8) * 0.5 + 0.5;
+    vec3 col = mix(c_void, mix(c_primary, c_secondary, wave), pow(wave, 2.0));
+    gl_FragColor = vec4(col, 1.0);
+}}"""
+
+    if format_type == "vert":
+        return """// Zoth Standard Screen Quad Vertex Shader
+attribute vec2 a_position;
+void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+}"""
+
     return json.dumps(
         {
             "schema": "zothos/reality/v3",
@@ -176,7 +206,7 @@ class RealityForgeHandler(http.server.SimpleHTTPRequestHandler):
                     {
                         "status": "online",
                         "service": "reality-shader-forge",
-                        "formats": ["kde", "alacritty", "css", "json"],
+                        "formats": ["kde", "alacritty", "css", "json", "frag", "vert"],
                         "realities": [r["name"] for r in REALITIES],
                         "free_open_access": True,
                     }
@@ -230,7 +260,7 @@ def main():
             "version": "3.4.0",
             "port": args.port,
             "realities": [r["id"] for r in REALITIES],
-            "formats": ["kde", "alacritty", "css", "json"],
+            "formats": ["kde", "alacritty", "css", "json", "frag", "vert"],
             "status": "ready",
         }
         print(json.dumps(payload, indent=2))

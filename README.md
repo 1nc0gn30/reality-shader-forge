@@ -13,10 +13,12 @@ Interactive WebGL/Canvas shader synthesizer and ZothOS desktop theme compiler (`
 Zoth Reality Shader & Theme Forge (`reality-shader-forge`) provides both an interactive browser workstation (`public/index.html`) and a zero-dependency Python HTTP/CLI compiler (`server.py`, `bin/reality-shader-forge`):
 
 - **Five Zoth Realities**: `gold` (`Aurum Gold`), `emerald` (`Sovereign Emerald`), `cyan` (`Cyber Cyan`), `crimson` (`Ghost Crimson`), and `purple` (`Void Obsidian`).
-- **Four Deterministic Output Formats**:
+- **Deterministic Output Formats**:
   - `kde` — KDE Plasma 6 `[General]`, `[Colors:Window]`, `[Colors:Selection]`, and `[Colors:Button]` RGB `.colors` scheme (`ZothOS-<reality>`).
   - `alacritty` — Alacritty TOML `[colors.primary]`, `[colors.cursor]`, `[colors.selection]`, and `[colors.normal]` configuration.
   - `css` — CSS `:root` custom properties (`--zoth-reality-primary`, `--zoth-reality-secondary`, `--zoth-reality-void`, `--zoth-reality-surface`, `--zoth-reality-text`, `--zoth-border-accent`, `--zoth-shadow-glow`).
+  - `frag` — GLSL fragment shader (`.frag`) for procedural kinetic particle / reality waves.
+  - `vert` — GLSL standard screen quad vertex shader (`.vert`).
   - `json` — Structured `zothos/reality/v3` palette descriptor.
 - **Unicode Braille TUI (`bin/reality-shader-forge-tui`)**: Terminal sparkline (`U+2800`) telemetry and benchmark harness.
 

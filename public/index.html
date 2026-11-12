@@ -597,6 +597,9 @@
           <button class="btn btn-outline" type="button" onclick="resetActiveReality()">
             ↺ Reset Theme
           </button>
+          <button class="btn btn-outline" type="button" onclick="captureCanvasFrame()" style="border-color: rgba(56,189,248,0.4); color: #38BDF8;">
+            📸 Snapshot PNG
+          </button>
         </div>
       </section>
 
@@ -625,6 +628,8 @@
           <button id="tabKde" class="tab-btn active" type="button" onclick="switchTab('kde')">KDE Plasma (.colors)</button>
           <button id="tabAlacritty" class="tab-btn" type="button" onclick="switchTab('alacritty')">Alacritty (.toml)</button>
           <button id="tabCss" class="tab-btn" type="button" onclick="switchTab('css')">CSS Tokens</button>
+          <button id="tabFrag" class="tab-btn" type="button" onclick="switchTab('frag')">GLSL (.frag)</button>
+          <button id="tabVert" class="tab-btn" type="button" onclick="switchTab('vert')">GLSL (.vert)</button>
           <button id="tabJson" class="tab-btn" type="button" onclick="switchTab('json')">ZothOS JSON</button>
         </div>
 
@@ -848,11 +853,57 @@ white   = "${r.text}"`;
       }, null, 2);
     }
 
+    function generateGlslFrag(r) {
+      const rgbP = hexToRgb(r.primary);
+      const rgbS = hexToRgb(r.secondary);
+      const rgbV = hexToRgb(r.bgVoid);
+      return `// Zoth Reality Kinetic Shader Fragment: ${r.name}
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform vec2 u_resolution;
+uniform float u_time;
+
+const vec3 c_primary = vec3(${(rgbP.r/255).toFixed(4)}, ${(rgbP.g/255).toFixed(4)}, ${(rgbP.b/255).toFixed(4)});
+const vec3 c_secondary = vec3(${(rgbS.r/255).toFixed(4)}, ${(rgbS.g/255).toFixed(4)}, ${(rgbS.b/255).toFixed(4)});
+const vec3 c_void = vec3(${(rgbV.r/255).toFixed(4)}, ${(rgbV.g/255).toFixed(4)}, ${(rgbV.b/255).toFixed(4)});
+
+void main() {
+    vec2 st = gl_FragCoord.xy / u_resolution.xy;
+    st.x *= u_resolution.x / u_resolution.y;
+    vec2 pos = st * 3.0;
+    float wave = sin(pos.x + u_time * ${particleSpeed.toFixed(1)}) * cos(pos.y + u_time * ${(particleSpeed * 0.8).toFixed(1)}) * 0.5 + 0.5;
+    vec3 col = mix(c_void, mix(c_primary, c_secondary, wave), pow(wave, 2.0));
+    gl_FragColor = vec4(col, 1.0);
+}`;
+    }
+
+    function generateGlslVert() {
+      return `// Zoth Standard Screen Quad Vertex Shader
+attribute vec2 a_position;
+void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+    }
+
+    function captureCanvasFrame() {
+      const canvas = document.getElementById('shaderCanvas');
+      if (!canvas) return;
+      const dataUrl = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `zoth_reality_${currentReality.id}_frame.png`;
+      a.click();
+    }
+
     function switchTab(tab) {
       activeTab = tab;
       document.getElementById('tabKde').classList.toggle('active', tab === 'kde');
       document.getElementById('tabAlacritty').classList.toggle('active', tab === 'alacritty');
       document.getElementById('tabCss').classList.toggle('active', tab === 'css');
+      document.getElementById('tabFrag').classList.toggle('active', tab === 'frag');
+      document.getElementById('tabVert').classList.toggle('active', tab === 'vert');
       document.getElementById('tabJson').classList.toggle('active', tab === 'json');
       updateCodeOutput();
     }
@@ -865,6 +916,10 @@ white   = "${r.text}"`;
         out.textContent = generateAlacritty(currentReality);
       } else if (activeTab === 'css') {
         out.textContent = generateCssTokens(currentReality);
+      } else if (activeTab === 'frag') {
+        out.textContent = generateGlslFrag(currentReality);
+      } else if (activeTab === 'vert') {
+        out.textContent = generateGlslVert();
       } else {
         out.textContent = generateJson(currentReality);
       }
@@ -886,6 +941,10 @@ white   = "${r.text}"`;
       } else if (activeTab === 'css') {
         filename += '.css';
         mime = 'text/css';
+      } else if (activeTab === 'frag') {
+        filename += '.frag';
+      } else if (activeTab === 'vert') {
+        filename += '.vert';
       } else {
         filename += '.json';
         mime = 'application/json';
