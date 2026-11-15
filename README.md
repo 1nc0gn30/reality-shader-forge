@@ -103,8 +103,10 @@ gitleaks detect --source . --no-banner --redact
 
 ## Support
 
-Zoth Reality Shader & Theme Forge is 100% free and open-source with zero paywalls. Optional community support: [Buy Us a Coffee via Stripe](https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X).
+Zoth Reality Shader & Theme Forge is 100% free and open-source with zero paywalls. Optional community support:
+- [Buy Us a Coffee via Stripe](https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X)
+- **Solana Tip Address**: `GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK`
 
-## License
+## License & Attribution
 
-Released under the [MIT License](LICENSE). Copyright (c) 2026 1nc0gn30 & NullAI ([https://nullai.tech](https://nullai.tech)).
+Engineered by **Neal Frazier Tech (`@1nc0gn30`) • NullAI Platform** ([https://nullai.tech](https://nullai.tech)) • [GitHub Repository](https://github.com/1nc0gn30/reality-shader-forge). Released under the [MIT License](LICENSE).
